@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/xml"
 	"fmt"
+	"golang.org/x/net/html/charset"
 	"io"
 	"io/ioutil"
 	"net"
@@ -542,6 +543,7 @@ func (s *Client) call(ctx context.Context, soapAction string, request, response 
 		dec = newMmaDecoder(body, mmaBoundary)
 	} else {
 		dec = xml.NewDecoder(body)
+		dec.(*xml.Decoder).CharsetReader = charset.NewReaderLabel
 	}
 
 	if err := dec.Decode(respEnvelope); err != nil {
